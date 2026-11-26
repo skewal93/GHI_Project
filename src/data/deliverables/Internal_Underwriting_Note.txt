@@ -1,0 +1,17 @@
+# Internal Bulk Underwriting Memo — SME GHI + Multiline Tender
+
+## Portfolio Snapshot
+- **Accounts evaluated:** 40
+- **Total expiring GHI premium:** ₹43,319,024.93
+- **Option A (As-Is) total:** ₹144,744,001.42
+- **Option B (Co-Pay / Sub-Limit Shield) total:** ₹127,374,721.24
+- **Option C (Multiline Bundled) total:** ₹140,280,206.10
+
+## Referral & Risk Flags
+- **Red Referral Accounts (40):** ACC_001, ACC_002, ACC_003, ACC_004, ACC_005, ACC_006, ACC_007, ACC_008, ACC_009, ACC_010, ACC_011, ACC_012, ACC_013, ACC_014, ACC_015, ACC_016, ACC_017, ACC_018, ACC_019, ACC_020, ACC_021, ACC_022, ACC_023, ACC_024, ACC_025, ACC_026, ACC_027, ACC_028, ACC_029, ACC_030, ACC_031, ACC_032, ACC_033, ACC_034, ACC_035, ACC_036, ACC_037, ACC_038, ACC_039, ACC_040
+- **Broker Sector Mismatches (1):** ACC_019
+
+## Underwriting Conditions for Broker
+- Apply 20% parental co-pay and room-rent sub-limits on high-parent-share / Amber-Red accounts.
+- Lock multiline GHI discounts strictly contingent on binding attached GPA, Fire, or Marine policies.
+- Confirm final active member roster and dependent DOBs prior to policy issuance.
