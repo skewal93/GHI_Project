@@ -2,18 +2,16 @@
 
 End-to-end Python underwriting and pricing prototype for an **SME Bulk Group Health Insurance (GHI)** tender with attached commercial lines (**GPA, Fire, Marine**). Built around a realistic broker/TPA submission containing messy census data, claim anomalies, partial-year exposure, shock claims, and sector misclassifications.
 
-## Workflow Overview
+## Input-to-Output Summary
 
-1. **`01_synthetic_generator.py`**: Generates 40 SME accounts with employee/dependent rosters and claims up to a mid-year cutoff, injecting date format inconsistencies, inverted dates, orphan member IDs, duplicate claims, billing anomalies, shock claims, and broker sector mismatches.
-2. **`02_ingestion_hygiene.py`**: Standardizes dates and identifiers, imputes missing dependent ages by relation median, logs broker sector discrepancies, and quarantines invalid/duplicate records instead of silently dropping them.
-3. **`03_pricing_engine.py`**: Computes **Earned Life-Years** (accounting for mid-term additions and deletions), applies claim-type **IBNR** uplift and annualization, splits **attritional vs. shock losses** at a ₹2,50,000 cap, blends experience with sector benchmarks via credibility weighting ($Z$), trends for medical inflation, and flags `Green_STP`, `Amber_Load_Or_Copay`, and `Red_Referral` accounts.
-4. **`04_quote_generator.py`**: Produces `Broker_Commercial_Quote_Pack.xlsx` (Option A As-Is Renewal, Option B Co-Pay & Sub-Limit Shield, Option C Multiline Bundled Quote) and `Internal_Underwriting_Note.txt`.
+| Stage | What Goes In | What Happens Behind the Scenes | What Comes Out |
+| :--- | :--- | :--- | :--- |
+| **1. Synthetic Broker & TPA Dump** | Config rules & sector/multiline parameters | Simulates 40 SME accounts, member rosters, and ~8 months of claims with messy real-world anomalies | `broker_accounts.csv`, `broker_census.csv`, `tpa_claims.csv` |
+| **2. Ingestion & Hygiene** | Raw broker & TPA CSVs | Normalizes dates/IDs/relations, imputes missing dependent ages, and quarantines bad/duplicate rows | Clean warehouse tables + quarantine & sector-mismatch audit CSVs |
+| **3. Exposure, IBNR & Pricing Engine** | Clean tables + pricing assumptions | Computes earned life-years, applies IBNR & annualization, caps shock losses, blends via credibility ($Z$), trends for inflation, and triages risk | `account_pricing_summary.csv` (`Green_STP`, `Amber_Load_Or_Copay`, `Red_Referral`) |
+| **4. Quote & Underwriting Outputs** | Pricing summary + audit logs | Builds three commercial quote options per account and flags referral/subjectivity conditions | `Broker_Commercial_Quote_Pack.xlsx` + `Internal_Underwriting_Note.txt` |
 
-## How to Run
-
-```bash
-cd src
-python 01_synthetic_generator.py
-python 02_ingestion_hygiene.py
-python 03_pricing_engine.py
-python 04_quote_generator.py
+### Quick Takeaways for Reviewers
+* **Inputs:** Messy multi-account census and claim feeds with mid-term churn, inverted dates, orphan IDs, duplicate rows, billing errors, shock claims, and broker sector mismatches.
+* **Core Logic:** Earned exposure instead of raw headcount, IBNR + annualization, shock capping at ₹2.5L, credibility blending with sector benchmarks, and multiline bundling discounts (`GPA`, `Fire`, `Marine`).
+* **Outputs:** A 3-sheet Excel quote pack (**Option A: As-Is**, **Option B: Co-Pay Shield**, **Option C: Multiline Bundle**), a plain-text internal underwriting memo.
